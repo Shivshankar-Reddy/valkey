@@ -31,7 +31,7 @@ endif
 ifneq ($(OPTIMIZATION),-O0)
 	OPTIMIZATION+=-fno-omit-frame-pointer
 endif
-DEPENDENCY_TARGETS=hiredis linenoise lua hdr_histogram fpconv
+DEPENDENCY_TARGETS=hiredis linenoise lua hdr_histogram fpconv ngt
 NODEPS:=clean distclean
 
 # Default settings
@@ -256,7 +256,18 @@ FINAL_CFLAGS+= -I../deps/hiredis -I../deps/linenoise -I../deps/lua/src -I../deps
 FINAL_CFLAGS+= -I../deps/NGT/lib/NGT -I../deps/NGT/lib/NGT/NGTQ
 
 # Add NGT static library to linker flags
-FINAL_LIBS+= ../deps/NGT/build/lib/NGT/libngt.a -lstdc++ -fopenmp -lopenblas
+FINAL_LIBS+= $(NGT_LIB) -lstdc++ -fopenmp -lopenblas
+
+# Build NGT from source
+NGT_BUILD_DIR=../deps/NGT/build
+NGT_LIB=$(NGT_BUILD_DIR)/lib/NGT/libngt.a
+
+$(NGT_LIB): $(NGT_BUILD_DIR)/CMakeCache.txt
+	$(MAKE) -C $(NGT_BUILD_DIR) -j$(shell nproc)
+
+$(NGT_BUILD_DIR)/CMakeCache.txt: ../deps/NGT/CMakeLists.txt
+	mkdir -p $(NGT_BUILD_DIR)
+	cd $(NGT_BUILD_DIR) && cmake .. -DCMAKE_BUILD_TYPE=Release -DNGT_BUILD_SHARED_LIBRARY=OFF
 
 # Determine systemd support and/or build preference (defaulting to auto-detection)
 BUILD_WITH_SYSTEMD=no
@@ -446,7 +457,7 @@ ifeq ($(USE_FAST_FLOAT),yes)
 	FINAL_LIBS += $(FAST_FLOAT_STRTOD_OBJECT)
 endif
 
-all: $(SERVER_NAME) $(ENGINE_SENTINEL_NAME) $(ENGINE_CLI_NAME) $(ENGINE_BENCHMARK_NAME) $(ENGINE_CHECK_RDB_NAME) $(ENGINE_CHECK_AOF_NAME) $(TLS_MODULE) $(RDMA_MODULE) ../deps/NGT/build/lib/NGT/libngt.a
+all: $(SERVER_NAME) $(ENGINE_SENTINEL_NAME) $(ENGINE_CLI_NAME) $(ENGINE_BENCHMARK_NAME) $(ENGINE_CHECK_RDB_NAME) $(ENGINE_CHECK_AOF_NAME) $(TLS_MODULE) $(RDMA_MODULE) $(NGT_LIB)
 	@echo ""
 	@echo "Hint: It's a good idea to run 'make test' ;)"
 	@echo ""
