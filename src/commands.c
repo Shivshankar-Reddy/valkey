@@ -1,5 +1,6 @@
 #include "commands.h"
 #include "server.h"
+#include "vector_commands.h"
 
 #define MAKE_CMD(name, summary, complexity, since, doc_flags, replaced, deprecated, group, group_enum, history, \
                  num_history, tips, num_tips, function, arity, flags, acl, key_specs, key_specs_num, get_keys,  \

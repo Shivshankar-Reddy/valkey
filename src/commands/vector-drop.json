@@ -1,0 +1,23 @@
+{
+    "VECTOR_DROP": {
+        "summary": "Removes a vector index.",
+        "complexity": "O(1)",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": 2,
+        "function": "vectorDropCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            {
+                "name": "indexname",
+                "type": "string"
+            }
+        ]
+    }
+} 

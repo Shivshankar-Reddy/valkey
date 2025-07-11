@@ -1,0 +1,18 @@
+{
+    "VECTOR_LIST": {
+        "summary": "Lists all vector indices.",
+        "complexity": "O(N) where N is the number of indices.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": 1,
+        "function": "vectorListCommand",
+        "command_flags": [
+            "READONLY",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": []
+    }
+} 

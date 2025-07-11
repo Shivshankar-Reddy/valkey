@@ -11047,6 +11047,187 @@ struct COMMAND_ARG WATCH_Args[] = {
 {MAKE_ARG("key",ARG_TYPE_KEY,0,NULL,NULL,NULL,CMD_ARG_MULTIPLE,0,NULL)},
 };
 
+/********** VECTOR_BUILD ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_BUILD history */
+#define VECTOR_BUILD_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_BUILD tips */
+#define VECTOR_BUILD_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_BUILD key specs */
+#define VECTOR_BUILD_Keyspecs NULL
+#endif
+
+/* VECTOR_BUILD argument table */
+struct COMMAND_ARG VECTOR_BUILD_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
+
+/********** VECTOR_CREATE ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_CREATE history */
+#define VECTOR_CREATE_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_CREATE tips */
+#define VECTOR_CREATE_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_CREATE key specs */
+#define VECTOR_CREATE_Keyspecs NULL
+#endif
+
+/* VECTOR_CREATE argument table */
+struct COMMAND_ARG VECTOR_CREATE_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("dimension",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("edgesizeforcreation",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("edgesizeforsearch",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("distancetype",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("objecttype",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("graphtype",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+};
+
+/********** VECTOR_DROP ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_DROP history */
+#define VECTOR_DROP_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_DROP tips */
+#define VECTOR_DROP_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_DROP key specs */
+#define VECTOR_DROP_Keyspecs NULL
+#endif
+
+/* VECTOR_DROP argument table */
+struct COMMAND_ARG VECTOR_DROP_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
+
+/********** VECTOR_INFO ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_INFO history */
+#define VECTOR_INFO_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_INFO tips */
+#define VECTOR_INFO_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_INFO key specs */
+#define VECTOR_INFO_Keyspecs NULL
+#endif
+
+/* VECTOR_INFO argument table */
+struct COMMAND_ARG VECTOR_INFO_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
+
+/********** VECTOR_INSERT ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_INSERT history */
+#define VECTOR_INSERT_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_INSERT tips */
+#define VECTOR_INSERT_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_INSERT key specs */
+#define VECTOR_INSERT_Keyspecs NULL
+#endif
+
+/* VECTOR_INSERT argument table */
+struct COMMAND_ARG VECTOR_INSERT_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("vectorid",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("vectordata",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
+
+/********** VECTOR_LIST ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_LIST history */
+#define VECTOR_LIST_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_LIST tips */
+#define VECTOR_LIST_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_LIST key specs */
+#define VECTOR_LIST_Keyspecs NULL
+#endif
+
+/********** VECTOR_REFINE ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_REFINE history */
+#define VECTOR_REFINE_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_REFINE tips */
+#define VECTOR_REFINE_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_REFINE key specs */
+#define VECTOR_REFINE_Keyspecs NULL
+#endif
+
+/* VECTOR_REFINE argument table */
+struct COMMAND_ARG VECTOR_REFINE_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
+
+/********** VECTOR_SEARCH ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_SEARCH history */
+#define VECTOR_SEARCH_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_SEARCH tips */
+#define VECTOR_SEARCH_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_SEARCH key specs */
+#define VECTOR_SEARCH_Keyspecs NULL
+#endif
+
+/* VECTOR_SEARCH argument table */
+struct COMMAND_ARG VECTOR_SEARCH_Args[] = {
+{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("queryvector",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("k",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
+
 /* Main command table */
 struct COMMAND_STRUCT serverCommandTable[] = {
 /* bitmap */
@@ -11309,5 +11490,14 @@ struct COMMAND_STRUCT serverCommandTable[] = {
 {MAKE_CMD("multi","Starts a transaction.","O(1)","1.2.0",CMD_DOC_NONE,NULL,NULL,"transactions",COMMAND_GROUP_TRANSACTIONS,MULTI_History,0,MULTI_Tips,0,multiCommand,1,CMD_NOSCRIPT|CMD_LOADING|CMD_STALE|CMD_FAST|CMD_NO_MULTI|CMD_ALLOW_BUSY,ACL_CATEGORY_TRANSACTION,MULTI_Keyspecs,0,NULL,0)},
 {MAKE_CMD("unwatch","Forgets about watched keys of a transaction.","O(1)","2.2.0",CMD_DOC_NONE,NULL,NULL,"transactions",COMMAND_GROUP_TRANSACTIONS,UNWATCH_History,0,UNWATCH_Tips,0,unwatchCommand,1,CMD_NOSCRIPT|CMD_LOADING|CMD_STALE|CMD_FAST|CMD_ALLOW_BUSY,ACL_CATEGORY_TRANSACTION,UNWATCH_Keyspecs,0,NULL,0)},
 {MAKE_CMD("watch","Monitors changes to keys to determine the execution of a transaction.","O(1) for every key.","2.2.0",CMD_DOC_NONE,NULL,NULL,"transactions",COMMAND_GROUP_TRANSACTIONS,WATCH_History,0,WATCH_Tips,0,watchCommand,-2,CMD_NOSCRIPT|CMD_LOADING|CMD_STALE|CMD_FAST|CMD_NO_MULTI|CMD_ALLOW_BUSY,ACL_CATEGORY_TRANSACTION,WATCH_Keyspecs,1,NULL,1),.args=WATCH_Args},
+/* vector */
+{MAKE_CMD("vector_build","Builds the index for efficient search.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_BUILD_History,0,VECTOR_BUILD_Tips,0,vectorBuildCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_BUILD_Keyspecs,0,NULL,1),.args=VECTOR_BUILD_Args},
+{MAKE_CMD("vector_create","Creates a new vector index for similarity search.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_CREATE_History,0,VECTOR_CREATE_Tips,0,vectorCreateCommand,-3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_CREATE_Keyspecs,0,NULL,7),.args=VECTOR_CREATE_Args},
+{MAKE_CMD("vector_drop","Removes a vector index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_DROP_History,0,VECTOR_DROP_Tips,0,vectorDropCommand,2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_DROP_Keyspecs,0,NULL,1),.args=VECTOR_DROP_Args},
+{MAKE_CMD("vector_info","Returns information about a vector index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_INFO_History,0,VECTOR_INFO_Tips,0,vectorInfoCommand,2,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_INFO_Keyspecs,0,NULL,1),.args=VECTOR_INFO_Args},
+{MAKE_CMD("vector_insert","Inserts a vector into an index.","O(log(N)) where N is the number of vectors in the index.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_INSERT_History,0,VECTOR_INSERT_Tips,0,vectorInsertCommand,-4,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_INSERT_Keyspecs,0,NULL,3),.args=VECTOR_INSERT_Args},
+{MAKE_CMD("vector_list","Lists all vector indices.","O(N) where N is the number of indices.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_LIST_History,0,VECTOR_LIST_Tips,0,vectorListCommand,1,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_LIST_Keyspecs,0,NULL,0)},
+{MAKE_CMD("vector_refine","Refines the index for better search accuracy.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_REFINE_History,0,VECTOR_REFINE_Tips,0,vectorRefineCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_REFINE_Keyspecs,0,NULL,1),.args=VECTOR_REFINE_Args},
+{MAKE_CMD("vector_search","Searches for similar vectors in an index.","O(log(N)) where N is the number of vectors in the index.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_SEARCH_History,0,VECTOR_SEARCH_Tips,0,vectorSearchCommand,-4,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_SEARCH_Keyspecs,0,NULL,3),.args=VECTOR_SEARCH_Args},
 {0}
 };

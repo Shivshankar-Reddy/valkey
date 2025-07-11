@@ -1,0 +1,23 @@
+{
+    "VECTOR_INFO": {
+        "summary": "Returns information about a vector index.",
+        "complexity": "O(1)",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": 2,
+        "function": "vectorInfoCommand",
+        "command_flags": [
+            "READONLY",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            {
+                "name": "indexname",
+                "type": "string"
+            }
+        ]
+    }
+} 

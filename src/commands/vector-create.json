@@ -1,0 +1,52 @@
+{
+    "VECTOR_CREATE": {
+        "summary": "Creates a new vector index for similarity search.",
+        "complexity": "O(1)",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -3,
+        "function": "vectorCreateCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            {
+                "name": "indexname",
+                "type": "string"
+            },
+            {
+                "name": "dimension",
+                "type": "integer"
+            },
+            {
+                "name": "edgesizeforcreation",
+                "type": "integer",
+                "optional": true
+            },
+            {
+                "name": "edgesizeforsearch",
+                "type": "integer",
+                "optional": true
+            },
+            {
+                "name": "distancetype",
+                "type": "string",
+                "optional": true
+            },
+            {
+                "name": "objecttype",
+                "type": "string",
+                "optional": true
+            },
+            {
+                "name": "graphtype",
+                "type": "string",
+                "optional": true
+            }
+        ]
+    }
+} 

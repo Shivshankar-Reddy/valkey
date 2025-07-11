@@ -1,0 +1,31 @@
+{
+    "VECTOR_INSERT": {
+        "summary": "Inserts a vector into an index.",
+        "complexity": "O(log(N)) where N is the number of vectors in the index.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -4,
+        "function": "vectorInsertCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            {
+                "name": "indexname",
+                "type": "string"
+            },
+            {
+                "name": "vectorid",
+                "type": "string"
+            },
+            {
+                "name": "vectordata",
+                "type": "string"
+            }
+        ]
+    }
+} 

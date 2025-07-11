@@ -123,3 +123,12 @@ fast_float_c_interface: .make-prerequisites
 	cd fast_float_c_interface && $(MAKE)
 
 .PHONY: fast_float_c_interface
+
+ngt:
+	@echo "Building NGT library with CMake..."
+	cd NGT && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && $(MAKE)
+
+.PHONY: ngt
+
+# Add ngt to dependency targets
+DEPENDENCY_TARGETS=hiredis linenoise lua hdr_histogram fpconv fast_float_c_interface ngt

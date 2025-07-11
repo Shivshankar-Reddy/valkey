@@ -51,6 +51,7 @@
 #include "lua/engine_lua.h"
 #include "lua/debug_lua.h"
 #include "eval.h"
+#include "vector_commands.h"
 
 #include <time.h>
 #include <signal.h>
@@ -964,7 +965,7 @@ int clientsCronResizeQueryBuffer(client *c) {
  * the logic is:
  * in case the last observed peak size of the buffer equals the buffer size - we double the size
  * in case the last observed peak size of the buffer is less than half the buffer size - we shrink by half.
- * The buffer peak will be reset back to the buffer position every server.reply_buffer_peak_reset_time milliseconds
+ * The buffer peak will be reset back to the buffer position each server.reply_buffer_peak_reset_time milliseconds
  * The function always returns 0 as it never terminates the client. */
 int clientsCronResizeOutputBuffer(client *c, mstime_t now_ms) {
     if (c->io_write_state != CLIENT_IDLE) return 0;
@@ -2979,6 +2980,9 @@ void initServer(void) {
     applyWatchdogPeriod();
 
     if (server.maxmemory_clients != 0) initServerClientMemUsageBuckets();
+
+    /* Initialize vector indices storage */
+    initVectorIndices();
 }
 
 void initListeners(void) {

@@ -34,6 +34,7 @@ GROUPS = {
     "geo": "COMMAND_GROUP_GEO",
     "stream": "COMMAND_GROUP_STREAM",
     "bitmap": "COMMAND_GROUP_BITMAP",
+    "vector": "COMMAND_GROUP_VECTOR",
 }
 
 
