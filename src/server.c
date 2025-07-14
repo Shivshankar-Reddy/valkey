@@ -2983,6 +2983,8 @@ void initServer(void) {
 
     /* Initialize vector indices storage */
     initVectorIndices();
+    /* Initialize quantized vector indices storage */
+    initQuantizedVectorIndices();
 }
 
 void initListeners(void) {

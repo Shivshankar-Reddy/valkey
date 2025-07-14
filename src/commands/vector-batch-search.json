@@ -1,0 +1,22 @@
+{
+    "VECTOR_BATCH_SEARCH": {
+        "summary": "Batch search for multiple query vectors in an index.",
+        "complexity": "O(M*K) where M is the number of queries and K is the number of neighbors.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -4,
+        "function": "vectorBatchSearchCommand",
+        "command_flags": [
+            "READONLY",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            { "name": "indexname", "type": "string" },
+            { "name": "k", "type": "integer" },
+            { "name": "queries", "type": "string", "multiple": true }
+        ]
+    }
+} 

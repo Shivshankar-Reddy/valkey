@@ -1,0 +1,36 @@
+{
+    "VECTOR_QUANTIZED_SEARCH": {
+        "summary": "Searches for similar vectors in a quantized index.",
+        "complexity": "O(log(N)) where N is the number of vectors in the index.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -4,
+        "function": "vectorQuantizedSearchCommand",
+        "command_flags": [
+            "READONLY",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            {
+                "name": "indexname",
+                "type": "string"
+            },
+            {
+                "name": "queryvector",
+                "type": "string"
+            },
+            {
+                "name": "k",
+                "type": "integer"
+            },
+            {
+                "name": "epsilon",
+                "type": "double",
+                "optional": true
+            }
+        ]
+    }
+} 

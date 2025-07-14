@@ -1,0 +1,18 @@
+{
+    "VECTOR_QUANTIZED_LIST": {
+        "summary": "Lists all quantized vector indices.",
+        "complexity": "O(N) where N is the number of indices.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": 1,
+        "function": "vectorQuantizedListCommand",
+        "command_flags": [
+            "READONLY",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": []
+    }
+} 

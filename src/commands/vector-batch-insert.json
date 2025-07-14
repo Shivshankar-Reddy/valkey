@@ -1,0 +1,21 @@
+{
+    "VECTOR_BATCH_INSERT": {
+        "summary": "Batch insert vectors into an index.",
+        "complexity": "O(N) where N is the number of vectors inserted.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -3,
+        "function": "vectorBatchInsertCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            { "name": "indexname", "type": "string" },
+            { "name": "vectors", "type": "string", "multiple": true }
+        ]
+    }
+} 

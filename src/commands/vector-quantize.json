@@ -1,0 +1,33 @@
+{
+    "VECTOR_QUANTIZE": {
+        "summary": "Quantizes an existing vector index for reduced memory usage.",
+        "complexity": "O(N*log(N)) where N is the number of vectors.",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -2,
+        "function": "vectorQuantizeCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            {
+                "name": "indexname",
+                "type": "string"
+            },
+            {
+                "name": "dimensionofsubvector",
+                "type": "integer",
+                "optional": true
+            },
+            {
+                "name": "maxnumberofedges",
+                "type": "integer",
+                "optional": true
+            }
+        ]
+    }
+} 
