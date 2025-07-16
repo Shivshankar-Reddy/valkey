@@ -1384,16 +1384,16 @@ void sinterGenericCommand(client *c,
                 dstset->ptr = lpShrinkToFit(dstset->ptr);
             }
             setKey(c, c->db, dstkey, dstset, 0);
-            addReplyLongLong(c, setTypeSize(dstset));
             notifyKeyspaceEvent(NOTIFY_SET, "sinterstore", dstkey, c->db->id);
+            addReplyLongLong(c, setTypeSize(dstset));
             server.dirty++;
         } else {
-            addReply(c, shared.czero);
             if (dbDelete(c->db, dstkey)) {
                 server.dirty++;
                 signalModifiedKey(c, c->db, dstkey);
                 notifyKeyspaceEvent(NOTIFY_GENERIC, "del", dstkey, c->db->id);
             }
+            addReply(c, shared.czero);
         }
         decrRefCount(dstset);
     } else {
@@ -1608,16 +1608,16 @@ void sunionDiffGenericCommand(client *c, robj **setkeys, int setnum, robj *dstke
          * create this key with the result set inside */
         if (setTypeSize(dstset) > 0) {
             setKey(c, c->db, dstkey, dstset, 0);
-            addReplyLongLong(c, setTypeSize(dstset));
             notifyKeyspaceEvent(NOTIFY_SET, op == SET_OP_UNION ? "sunionstore" : "sdiffstore", dstkey, c->db->id);
             server.dirty++;
+            addReplyLongLong(c, setTypeSize(dstset));
         } else {
-            addReply(c, shared.czero);
             if (dbDelete(c->db, dstkey)) {
                 server.dirty++;
                 signalModifiedKey(c, c->db, dstkey);
                 notifyKeyspaceEvent(NOTIFY_GENERIC, "del", dstkey, c->db->id);
             }
+            addReply(c, shared.czero);
         }
         decrRefCount(dstset);
     }

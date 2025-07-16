@@ -1246,7 +1246,11 @@ typedef struct ClientFlags {
                                       * knows that it does not need the cache and required a full sync. With this
                                       * flag, we won't cache the primary in freeClient. */
     uint64_t fake : 1;               /* This is a fake client without a real connection. */
-    uint64_t reserved : 4;           /* Reserved for future use */
+    uint64_t buffered_reply : 1;           /* Indicates the reply for the current command was buffered, either in client::reply
+                                              or client::buf. */
+    uint64_t keyspace_notified : 1;        /* Indicates that a keyspace notification was triggered during the execution of the
+                                              current command. */
+    uint64_t reserved : 2;                 /* Reserved for future use */
 } ClientFlags;
 
 typedef struct client {
@@ -1296,6 +1300,10 @@ typedef struct client {
     size_t sentlen;                      /* Amount of bytes already sent in the current
                                             buffer or object being sent. */
     time_t ctime;                        /* Client creation time. */
+    list *deferred_reply;                    /* List of reply objects to be sent to the client, typically after
+                                                the client has been unblocked. */
+    unsigned long long deferred_reply_bytes; /* Total bytes of objects in the blocked client pending list.*/
+
     long duration;           /* Current command duration. Used for measuring latency of blocking/non-blocking cmds */
     int slot;                /* The slot the client is executing against. Set to -1 if no slot is being used */
     dictEntry *cur_script;   /* Cached pointer to the dictEntry of the script being executed. */
@@ -2697,6 +2705,7 @@ void moduleAcquireGIL(void);
 int moduleTryAcquireGIL(void);
 void moduleReleaseGIL(void);
 void moduleNotifyKeyspaceEvent(int type, const char *event, robj *key, int dbid);
+unsigned long moduleNotifyKeyspaceSubscribersCnt(void);
 void firePostExecutionUnitJobs(void);
 void moduleCallCommandFilters(client *c);
 void modulePostExecutionUnitOperations(void);
@@ -2787,6 +2796,8 @@ void resetClient(client *c);
 void freeClientOriginalArgv(client *c);
 void freeClientArgv(client *c);
 void sendReplyToClient(connection *conn);
+int isDeferredReplyEnabled(client *c);
+void initDeferredReplyBuffer(client *c);
 void *addReplyDeferredLen(client *c);
 void setDeferredArrayLen(client *c, void *node, long length);
 void setDeferredMapLen(client *c, void *node, long length);
@@ -2804,6 +2815,7 @@ void addReplyBool(client *c, int b);
 void addReplyVerbatim(client *c, const char *s, size_t len, const char *ext);
 void addReplyProto(client *c, const char *s, size_t len);
 void AddReplyFromClient(client *c, client *src);
+void commitDeferredReplyBuffer(client *c, int skip_if_blocked);
 void addReplyBulk(client *c, robj *obj);
 void addReplyBulkCString(client *c, const char *s);
 void addReplyBulkCBuffer(client *c, const void *p, size_t len);
@@ -2954,7 +2966,7 @@ void listTypeDelete(listTypeIterator *iter, listTypeEntry *entry);
 robj *listTypeDup(robj *o);
 void listTypeDelRange(robj *o, long start, long stop);
 void popGenericCommand(client *c, int where);
-void listElementsRemoved(client *c, robj *key, int where, robj *o, long count, int signal, int *deleted);
+void listElementsRemoved(client *c, robj *key, int where, robj *o, long count, int *deleted);
 typedef enum {
     LIST_CONV_AUTO,
     LIST_CONV_GROWING,
@@ -3668,6 +3680,7 @@ typedef struct luaScript {
 /* Blocked clients API */
 void processUnblockedClients(void);
 void initClientBlockingState(client *c);
+void resetBlockedClientPendingReply(client *c);
 void blockClient(client *c, int btype);
 void unblockClient(client *c, int queue_for_reprocessing);
 void unblockClientOnTimeout(client *c);

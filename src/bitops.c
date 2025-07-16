@@ -1150,6 +1150,7 @@ void bitfieldGeneric(client *c, int flags) {
         }
     }
 
+    initDeferredReplyBuffer(c);
     addReplyArrayLen(c, numops);
 
     /* Actually process the operations. */
@@ -1261,6 +1262,7 @@ void bitfieldGeneric(client *c, int flags) {
         notifyKeyspaceEvent(NOTIFY_STRING, "setbit", c->argv[1], c->db->id);
         server.dirty += changes;
     }
+    commitDeferredReplyBuffer(c, 1);
     zfree(ops);
 }
 

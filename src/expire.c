@@ -673,6 +673,9 @@ void expireGenericCommand(client *c, long long basetime, int unit) {
         return;
     } else {
         setExpire(c, c->db, key, when);
+        signalModifiedKey(c, c->db, key);
+        notifyKeyspaceEvent(NOTIFY_GENERIC, "expire", key, c->db->id);
+        server.dirty++;
         addReply(c, shared.cone);
         /* Propagate as PEXPIREAT millisecond-timestamp
          * Only rewrite the command arg if not already PEXPIREAT */
@@ -686,10 +689,6 @@ void expireGenericCommand(client *c, long long basetime, int unit) {
             rewriteClientCommandArgument(c, 2, when_obj);
             decrRefCount(when_obj);
         }
-
-        signalModifiedKey(c, c->db, key);
-        notifyKeyspaceEvent(NOTIFY_GENERIC, "expire", key, c->db->id);
-        server.dirty++;
         return;
     }
 }

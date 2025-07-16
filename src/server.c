@@ -3527,6 +3527,8 @@ void call(client *c, int flags) {
      * re-processing and unblock the client.*/
     c->flag.executing_command = 1;
 
+    c->flag.buffered_reply = 0;
+    c->flag.keyspace_notified = 0;
     /* Setting the CLIENT_REPROCESSING_COMMAND flag so that during the actual
      * processing of the command proc, the client is aware that it is being
      * re-processed. */
@@ -3869,6 +3871,7 @@ int processCommand(client *c) {
     if (!client_reprocessing_command) {
         struct serverCommand *cmd = c->io_parsed_cmd ? c->io_parsed_cmd : lookupCommand(c->argv, c->argc);
         c->cmd = c->lastcmd = c->realcmd = cmd;
+        c->flag.buffered_reply = 0;
         sds err;
         if (!commandCheckExistence(c, &err)) {
             rejectCommandSds(c, err);
