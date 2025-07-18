@@ -65,6 +65,10 @@ void vectorInfoCommand(client *c);
 void vectorListCommand(client *c);
 void vectorBatchInsertCommand(client *c);
 void vectorBatchSearchCommand(client *c);
+void vectorReconstructGraphCommand(client *c);
+void vectorQbgCreateQGCommand(client *c);
+void vectorQbgBuildQGCommand(client *c);
+void vectorQbgInsertCommand(client *c);
 
 /* NGTQ Command functions */
 void vectorQuantizeCommand(client *c);
@@ -75,5 +79,7 @@ void vectorQuantizedBuildCommand(client *c);
 void vectorQuantizedDropCommand(client *c);
 void vectorQuantizedInfoCommand(client *c);
 void vectorQuantizedListCommand(client *c);
+
+bool valkey_ngt_reconstruct_graph(const char *input_path, const char *output_path, int outdegree, int indegree, double epsilon, double accuracy, NGTError error);
 
 #endif /* VALKEY_VECTOR_COMMANDS_H */ 

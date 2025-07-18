@@ -1,6 +1,6 @@
 {
     "VECTOR_REFINE": {
-        "summary": "Refines the index for better search accuracy.",
+        "summary": "Refines the index for better search accuracy. Argument naming matches the CLI tools.",
         "complexity": "O(N*log(N)) where N is the number of vectors.",
         "group": "vector",
         "since": "1.0.0",
@@ -14,10 +14,7 @@
             "KEYSPACE"
         ],
         "arguments": [
-            {
-                "name": "indexname",
-                "type": "string"
-            }
+            { "name": "index", "type": "string" }
         ]
     }
 } 

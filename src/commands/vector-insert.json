@@ -15,15 +15,15 @@
         ],
         "arguments": [
             {
-                "name": "indexname",
+                "name": "index",
                 "type": "string"
             },
             {
-                "name": "vectorid",
+                "name": "id",
                 "type": "string"
             },
             {
-                "name": "vectordata",
+                "name": "vector",
                 "type": "string"
             }
         ]

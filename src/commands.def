@@ -11066,7 +11066,7 @@ struct COMMAND_ARG WATCH_Args[] = {
 
 /* VECTOR_BATCH_INSERT argument table */
 struct COMMAND_ARG VECTOR_BATCH_INSERT_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("vectors",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_MULTIPLE,0,NULL)},
 };
 
@@ -11089,7 +11089,7 @@ struct COMMAND_ARG VECTOR_BATCH_INSERT_Args[] = {
 
 /* VECTOR_BATCH_SEARCH argument table */
 struct COMMAND_ARG VECTOR_BATCH_SEARCH_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("k",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("queries",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_MULTIPLE,0,NULL)},
 };
@@ -11113,7 +11113,7 @@ struct COMMAND_ARG VECTOR_BATCH_SEARCH_Args[] = {
 
 /* VECTOR_BUILD argument table */
 struct COMMAND_ARG VECTOR_BUILD_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_CREATE ********************/
@@ -11135,7 +11135,7 @@ struct COMMAND_ARG VECTOR_BUILD_Args[] = {
 
 /* VECTOR_CREATE argument table */
 struct COMMAND_ARG VECTOR_CREATE_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("dimension",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("edgesizeforcreation",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
 {MAKE_ARG("edgesizeforsearch",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
@@ -11163,7 +11163,7 @@ struct COMMAND_ARG VECTOR_CREATE_Args[] = {
 
 /* VECTOR_DROP argument table */
 struct COMMAND_ARG VECTOR_DROP_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_INFO ********************/
@@ -11185,7 +11185,7 @@ struct COMMAND_ARG VECTOR_DROP_Args[] = {
 
 /* VECTOR_INFO argument table */
 struct COMMAND_ARG VECTOR_INFO_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_INSERT ********************/
@@ -11207,9 +11207,9 @@ struct COMMAND_ARG VECTOR_INFO_Args[] = {
 
 /* VECTOR_INSERT argument table */
 struct COMMAND_ARG VECTOR_INSERT_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
-{MAKE_ARG("vectorid",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
-{MAKE_ARG("vectordata",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("id",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("vector",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_LIST ********************/
@@ -11228,6 +11228,79 @@ struct COMMAND_ARG VECTOR_INSERT_Args[] = {
 /* VECTOR_LIST key specs */
 #define VECTOR_LIST_Keyspecs NULL
 #endif
+
+/********** VECTOR_QBG_BUILD_QG ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_QBG_BUILD_QG history */
+#define VECTOR_QBG_BUILD_QG_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_QBG_BUILD_QG tips */
+#define VECTOR_QBG_BUILD_QG_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_QBG_BUILD_QG key specs */
+#define VECTOR_QBG_BUILD_QG_Keyspecs NULL
+#endif
+
+/* VECTOR_QBG_BUILD_QG argument table */
+struct COMMAND_ARG VECTOR_QBG_BUILD_QG_Args[] = {
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("numberofobjects",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("numberofsubvectors",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("rotationiteration",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+};
+
+/********** VECTOR_QBG_CREATE_QG ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_QBG_CREATE_QG history */
+#define VECTOR_QBG_CREATE_QG_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_QBG_CREATE_QG tips */
+#define VECTOR_QBG_CREATE_QG_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_QBG_CREATE_QG key specs */
+#define VECTOR_QBG_CREATE_QG_Keyspecs NULL
+#endif
+
+/* VECTOR_QBG_CREATE_QG argument table */
+struct COMMAND_ARG VECTOR_QBG_CREATE_QG_Args[] = {
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("dimension",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("numberofsubvectors",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("numberofblobs",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+};
+
+/********** VECTOR_QBG_INSERT ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_QBG_INSERT history */
+#define VECTOR_QBG_INSERT_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_QBG_INSERT tips */
+#define VECTOR_QBG_INSERT_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_QBG_INSERT key specs */
+#define VECTOR_QBG_INSERT_Keyspecs NULL
+#endif
+
+/* VECTOR_QBG_INSERT argument table */
+struct COMMAND_ARG VECTOR_QBG_INSERT_Args[] = {
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("vector",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+};
 
 /********** VECTOR_QUANTIZE ********************/
 
@@ -11248,7 +11321,7 @@ struct COMMAND_ARG VECTOR_INSERT_Args[] = {
 
 /* VECTOR_QUANTIZE argument table */
 struct COMMAND_ARG VECTOR_QUANTIZE_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("dimensionofsubvector",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
 {MAKE_ARG("maxnumberofedges",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
 };
@@ -11272,7 +11345,7 @@ struct COMMAND_ARG VECTOR_QUANTIZE_Args[] = {
 
 /* VECTOR_QUANTIZED_BUILD argument table */
 struct COMMAND_ARG VECTOR_QUANTIZED_BUILD_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_QUANTIZED_CREATE ********************/
@@ -11294,7 +11367,7 @@ struct COMMAND_ARG VECTOR_QUANTIZED_BUILD_Args[] = {
 
 /* VECTOR_QUANTIZED_CREATE argument table */
 struct COMMAND_ARG VECTOR_QUANTIZED_CREATE_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("dimension",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("edgesizeforcreation",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
 {MAKE_ARG("edgesizeforsearch",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
@@ -11324,7 +11397,7 @@ struct COMMAND_ARG VECTOR_QUANTIZED_CREATE_Args[] = {
 
 /* VECTOR_QUANTIZED_DROP argument table */
 struct COMMAND_ARG VECTOR_QUANTIZED_DROP_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_QUANTIZED_INFO ********************/
@@ -11346,7 +11419,7 @@ struct COMMAND_ARG VECTOR_QUANTIZED_DROP_Args[] = {
 
 /* VECTOR_QUANTIZED_INFO argument table */
 struct COMMAND_ARG VECTOR_QUANTIZED_INFO_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_QUANTIZED_LIST ********************/
@@ -11385,10 +11458,37 @@ struct COMMAND_ARG VECTOR_QUANTIZED_INFO_Args[] = {
 
 /* VECTOR_QUANTIZED_SEARCH argument table */
 struct COMMAND_ARG VECTOR_QUANTIZED_SEARCH_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("queryvector",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("k",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("epsilon",ARG_TYPE_DOUBLE,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+};
+
+/********** VECTOR_RECONSTRUCT_GRAPH ********************/
+
+#ifndef SKIP_CMD_HISTORY_TABLE
+/* VECTOR_RECONSTRUCT_GRAPH history */
+#define VECTOR_RECONSTRUCT_GRAPH_History NULL
+#endif
+
+#ifndef SKIP_CMD_TIPS_TABLE
+/* VECTOR_RECONSTRUCT_GRAPH tips */
+#define VECTOR_RECONSTRUCT_GRAPH_Tips NULL
+#endif
+
+#ifndef SKIP_CMD_KEY_SPECS_TABLE
+/* VECTOR_RECONSTRUCT_GRAPH key specs */
+#define VECTOR_RECONSTRUCT_GRAPH_Keyspecs NULL
+#endif
+
+/* VECTOR_RECONSTRUCT_GRAPH argument table */
+struct COMMAND_ARG VECTOR_RECONSTRUCT_GRAPH_Args[] = {
+{MAKE_ARG("inputindex",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("outputindex",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("outdegree",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("indegree",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("epsilon",ARG_TYPE_DOUBLE,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
+{MAKE_ARG("accuracy",ARG_TYPE_DOUBLE,-1,NULL,NULL,NULL,CMD_ARG_OPTIONAL,0,NULL)},
 };
 
 /********** VECTOR_REFINE ********************/
@@ -11410,7 +11510,7 @@ struct COMMAND_ARG VECTOR_QUANTIZED_SEARCH_Args[] = {
 
 /* VECTOR_REFINE argument table */
 struct COMMAND_ARG VECTOR_REFINE_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
 
 /********** VECTOR_SEARCH ********************/
@@ -11432,7 +11532,7 @@ struct COMMAND_ARG VECTOR_REFINE_Args[] = {
 
 /* VECTOR_SEARCH argument table */
 struct COMMAND_ARG VECTOR_SEARCH_Args[] = {
-{MAKE_ARG("indexname",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
+{MAKE_ARG("index",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("queryvector",ARG_TYPE_STRING,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 {MAKE_ARG("k",ARG_TYPE_INTEGER,-1,NULL,NULL,NULL,CMD_ARG_NONE,0,NULL)},
 };
@@ -11700,22 +11800,26 @@ struct COMMAND_STRUCT serverCommandTable[] = {
 {MAKE_CMD("unwatch","Forgets about watched keys of a transaction.","O(1)","2.2.0",CMD_DOC_NONE,NULL,NULL,"transactions",COMMAND_GROUP_TRANSACTIONS,UNWATCH_History,0,UNWATCH_Tips,0,unwatchCommand,1,CMD_NOSCRIPT|CMD_LOADING|CMD_STALE|CMD_FAST|CMD_ALLOW_BUSY,ACL_CATEGORY_TRANSACTION,UNWATCH_Keyspecs,0,NULL,0)},
 {MAKE_CMD("watch","Monitors changes to keys to determine the execution of a transaction.","O(1) for every key.","2.2.0",CMD_DOC_NONE,NULL,NULL,"transactions",COMMAND_GROUP_TRANSACTIONS,WATCH_History,0,WATCH_Tips,0,watchCommand,-2,CMD_NOSCRIPT|CMD_LOADING|CMD_STALE|CMD_FAST|CMD_NO_MULTI|CMD_ALLOW_BUSY,ACL_CATEGORY_TRANSACTION,WATCH_Keyspecs,1,NULL,1),.args=WATCH_Args},
 /* vector */
-{MAKE_CMD("vector_batch_insert","Batch insert vectors into an index.","O(N) where N is the number of vectors inserted.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_BATCH_INSERT_History,0,VECTOR_BATCH_INSERT_Tips,0,vectorBatchInsertCommand,-3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_BATCH_INSERT_Keyspecs,0,NULL,2),.args=VECTOR_BATCH_INSERT_Args},
-{MAKE_CMD("vector_batch_search","Batch search for multiple query vectors in an index.","O(M*K) where M is the number of queries and K is the number of neighbors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_BATCH_SEARCH_History,0,VECTOR_BATCH_SEARCH_Tips,0,vectorBatchSearchCommand,-4,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_BATCH_SEARCH_Keyspecs,0,NULL,3),.args=VECTOR_BATCH_SEARCH_Args},
+{MAKE_CMD("vector_batch_insert","Batch insert vectors into an index. Argument order and naming match the CLI tools.","O(N) where N is the number of vectors inserted.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_BATCH_INSERT_History,0,VECTOR_BATCH_INSERT_Tips,0,vectorBatchInsertCommand,-3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_BATCH_INSERT_Keyspecs,0,NULL,2),.args=VECTOR_BATCH_INSERT_Args},
+{MAKE_CMD("vector_batch_search","Batch search for multiple query vectors in an index. Argument order and naming match the CLI tools.","O(M*K) where M is the number of queries and K is the number of neighbors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_BATCH_SEARCH_History,0,VECTOR_BATCH_SEARCH_Tips,0,vectorBatchSearchCommand,-4,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_BATCH_SEARCH_Keyspecs,0,NULL,3),.args=VECTOR_BATCH_SEARCH_Args},
 {MAKE_CMD("vector_build","Builds the index for efficient search.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_BUILD_History,0,VECTOR_BUILD_Tips,0,vectorBuildCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_BUILD_Keyspecs,0,NULL,1),.args=VECTOR_BUILD_Args},
 {MAKE_CMD("vector_create","Creates a new vector index for similarity search.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_CREATE_History,0,VECTOR_CREATE_Tips,0,vectorCreateCommand,-3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_CREATE_Keyspecs,0,NULL,7),.args=VECTOR_CREATE_Args},
 {MAKE_CMD("vector_drop","Removes a vector index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_DROP_History,0,VECTOR_DROP_Tips,0,vectorDropCommand,2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_DROP_Keyspecs,0,NULL,1),.args=VECTOR_DROP_Args},
 {MAKE_CMD("vector_info","Returns information about a vector index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_INFO_History,0,VECTOR_INFO_Tips,0,vectorInfoCommand,2,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_INFO_Keyspecs,0,NULL,1),.args=VECTOR_INFO_Args},
 {MAKE_CMD("vector_insert","Inserts a vector into an index.","O(log(N)) where N is the number of vectors in the index.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_INSERT_History,0,VECTOR_INSERT_Tips,0,vectorInsertCommand,-4,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_INSERT_Keyspecs,0,NULL,3),.args=VECTOR_INSERT_Args},
 {MAKE_CMD("vector_list","Lists all vector indices.","O(N) where N is the number of indices.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_LIST_History,0,VECTOR_LIST_Tips,0,vectorListCommand,1,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_LIST_Keyspecs,0,NULL,0)},
-{MAKE_CMD("vector_quantize","Quantizes an existing vector index for reduced memory usage.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZE_History,0,VECTOR_QUANTIZE_Tips,0,vectorQuantizeCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZE_Keyspecs,0,NULL,3),.args=VECTOR_QUANTIZE_Args},
-{MAKE_CMD("vector_quantized_build","Builds the quantized index for efficient search.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_BUILD_History,0,VECTOR_QUANTIZED_BUILD_Tips,0,vectorQuantizedBuildCommand,-1,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_BUILD_Keyspecs,0,NULL,1),.args=VECTOR_QUANTIZED_BUILD_Args},
-{MAKE_CMD("vector_quantized_create","Creates a new quantized vector index for similarity search.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_CREATE_History,0,VECTOR_QUANTIZED_CREATE_Tips,0,vectorQuantizedCreateCommand,-3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_CREATE_Keyspecs,0,NULL,9),.args=VECTOR_QUANTIZED_CREATE_Args},
-{MAKE_CMD("vector_quantized_drop","Removes a quantized vector index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_DROP_History,0,VECTOR_QUANTIZED_DROP_Tips,0,vectorQuantizedDropCommand,2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_DROP_Keyspecs,0,NULL,1),.args=VECTOR_QUANTIZED_DROP_Args},
-{MAKE_CMD("vector_quantized_info","Shows information about a quantized vector index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_INFO_History,0,VECTOR_QUANTIZED_INFO_Tips,0,vectorQuantizedInfoCommand,2,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_INFO_Keyspecs,0,NULL,1),.args=VECTOR_QUANTIZED_INFO_Args},
-{MAKE_CMD("vector_quantized_list","Lists all quantized vector indices.","O(N) where N is the number of indices.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_LIST_History,0,VECTOR_QUANTIZED_LIST_Tips,0,vectorQuantizedListCommand,1,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_LIST_Keyspecs,0,NULL,0)},
-{MAKE_CMD("vector_quantized_search","Searches for similar vectors in a quantized index.","O(log(N)) where N is the number of vectors in the index.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_SEARCH_History,0,VECTOR_QUANTIZED_SEARCH_Tips,0,vectorQuantizedSearchCommand,-4,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_SEARCH_Keyspecs,0,NULL,4),.args=VECTOR_QUANTIZED_SEARCH_Args},
-{MAKE_CMD("vector_refine","Refines the index for better search accuracy.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_REFINE_History,0,VECTOR_REFINE_Tips,0,vectorRefineCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_REFINE_Keyspecs,0,NULL,1),.args=VECTOR_REFINE_Args},
+{MAKE_CMD("vector_qbg_build_qg","Builds/optimizes a quantized blob graph (QBG) index. Argument order and naming match the QBG CLI.","O(N)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QBG_BUILD_QG_History,0,VECTOR_QBG_BUILD_QG_Tips,0,vectorQbgBuildQGCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QBG_BUILD_QG_Keyspecs,0,NULL,4),.args=VECTOR_QBG_BUILD_QG_Args},
+{MAKE_CMD("vector_qbg_create_qg","Creates a quantized blob graph (QBG) index. Argument order and naming match the QBG CLI.","O(N)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QBG_CREATE_QG_History,0,VECTOR_QBG_CREATE_QG_Tips,0,vectorQbgCreateQGCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QBG_CREATE_QG_Keyspecs,0,NULL,4),.args=VECTOR_QBG_CREATE_QG_Args},
+{MAKE_CMD("vector_qbg_insert","Inserts a vector into a QBG index.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QBG_INSERT_History,0,VECTOR_QBG_INSERT_Tips,0,vectorQbgInsertCommand,3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QBG_INSERT_Keyspecs,0,NULL,2),.args=VECTOR_QBG_INSERT_Args},
+{MAKE_CMD("vector_quantize","Quantizes an existing vector index for reduced memory usage. Argument order and naming match the NGTQG CLI.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZE_History,0,VECTOR_QUANTIZE_Tips,0,vectorQuantizeCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZE_Keyspecs,0,NULL,3),.args=VECTOR_QUANTIZE_Args},
+{MAKE_CMD("vector_quantized_build","Builds the quantized index for efficient search. Argument naming matches the NGTQG CLI.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_BUILD_History,0,VECTOR_QUANTIZED_BUILD_Tips,0,vectorQuantizedBuildCommand,-1,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_BUILD_Keyspecs,0,NULL,1),.args=VECTOR_QUANTIZED_BUILD_Args},
+{MAKE_CMD("vector_quantized_create","Creates a new quantized vector index for similarity search. Argument order and naming match the NGTQG CLI.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_CREATE_History,0,VECTOR_QUANTIZED_CREATE_Tips,0,vectorQuantizedCreateCommand,-3,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_CREATE_Keyspecs,0,NULL,9),.args=VECTOR_QUANTIZED_CREATE_Args},
+{MAKE_CMD("vector_quantized_drop","Removes a quantized vector index. Argument naming matches the NGTQG CLI.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_DROP_History,0,VECTOR_QUANTIZED_DROP_Tips,0,vectorQuantizedDropCommand,2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_DROP_Keyspecs,0,NULL,1),.args=VECTOR_QUANTIZED_DROP_Args},
+{MAKE_CMD("vector_quantized_info","Shows information about a quantized vector index. Argument naming matches the NGTQG CLI.","O(1)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_INFO_History,0,VECTOR_QUANTIZED_INFO_Tips,0,vectorQuantizedInfoCommand,2,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_INFO_Keyspecs,0,NULL,1),.args=VECTOR_QUANTIZED_INFO_Args},
+{MAKE_CMD("vector_quantized_list","Lists all quantized vector indices. Matches the NGTQG CLI.","O(N) where N is the number of indices.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_LIST_History,0,VECTOR_QUANTIZED_LIST_Tips,0,vectorQuantizedListCommand,1,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_LIST_Keyspecs,0,NULL,0)},
+{MAKE_CMD("vector_quantized_search","Searches for similar vectors in a quantized index. Argument order and naming match the NGTQG CLI.","O(log(N)) where N is the number of vectors in the index.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_QUANTIZED_SEARCH_History,0,VECTOR_QUANTIZED_SEARCH_Tips,0,vectorQuantizedSearchCommand,-4,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_QUANTIZED_SEARCH_Keyspecs,0,NULL,4),.args=VECTOR_QUANTIZED_SEARCH_Args},
+{MAKE_CMD("vector_reconstruct_graph","Reconstructs a graph from an existing NGT index using ANNG refinement. Argument order and naming match the NGT CLI.","O(N)","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_RECONSTRUCT_GRAPH_History,0,VECTOR_RECONSTRUCT_GRAPH_Tips,0,vectorReconstructGraphCommand,-4,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_RECONSTRUCT_GRAPH_Keyspecs,0,NULL,6),.args=VECTOR_RECONSTRUCT_GRAPH_Args},
+{MAKE_CMD("vector_refine","Refines the index for better search accuracy. Argument naming matches the CLI tools.","O(N*log(N)) where N is the number of vectors.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_REFINE_History,0,VECTOR_REFINE_Tips,0,vectorRefineCommand,-2,CMD_WRITE|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_REFINE_Keyspecs,0,NULL,1),.args=VECTOR_REFINE_Args},
 {MAKE_CMD("vector_search","Searches for similar vectors in an index.","O(log(N)) where N is the number of vectors in the index.","1.0.0",CMD_DOC_NONE,NULL,NULL,"vector",COMMAND_GROUP_VECTOR,VECTOR_SEARCH_History,0,VECTOR_SEARCH_Tips,0,vectorSearchCommand,-4,CMD_READONLY|CMD_FAST,ACL_CATEGORY_KEYSPACE,VECTOR_SEARCH_Keyspecs,0,NULL,3),.args=VECTOR_SEARCH_Args},
 {0}
 };

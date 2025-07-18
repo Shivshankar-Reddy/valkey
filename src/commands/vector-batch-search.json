@@ -1,6 +1,6 @@
 {
     "VECTOR_BATCH_SEARCH": {
-        "summary": "Batch search for multiple query vectors in an index.",
+        "summary": "Batch search for multiple query vectors in an index. Argument order and naming match the CLI tools.",
         "complexity": "O(M*K) where M is the number of queries and K is the number of neighbors.",
         "group": "vector",
         "since": "1.0.0",
@@ -14,7 +14,7 @@
             "KEYSPACE"
         ],
         "arguments": [
-            { "name": "indexname", "type": "string" },
+            { "name": "index", "type": "string" },
             { "name": "k", "type": "integer" },
             { "name": "queries", "type": "string", "multiple": true }
         ]

@@ -14,39 +14,13 @@
             "KEYSPACE"
         ],
         "arguments": [
-            {
-                "name": "indexname",
-                "type": "string"
-            },
-            {
-                "name": "dimension",
-                "type": "integer"
-            },
-            {
-                "name": "edgesizeforcreation",
-                "type": "integer",
-                "optional": true
-            },
-            {
-                "name": "edgesizeforsearch",
-                "type": "integer",
-                "optional": true
-            },
-            {
-                "name": "distancetype",
-                "type": "string",
-                "optional": true
-            },
-            {
-                "name": "objecttype",
-                "type": "string",
-                "optional": true
-            },
-            {
-                "name": "graphtype",
-                "type": "string",
-                "optional": true
-            }
+            { "name": "index", "type": "string" },
+            { "name": "dimension", "type": "integer" },
+            { "name": "edgesizeforcreation", "type": "integer", "optional": true },
+            { "name": "edgesizeforsearch", "type": "integer", "optional": true },
+            { "name": "distancetype", "type": "string", "optional": true },
+            { "name": "objecttype", "type": "string", "optional": true },
+            { "name": "graphtype", "type": "string", "optional": true }
         ]
     }
 } 

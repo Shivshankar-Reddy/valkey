@@ -1,0 +1,23 @@
+{
+    "VECTOR_QBG_BUILD_QG": {
+        "summary": "Builds/optimizes a quantized blob graph (QBG) index. Argument order and naming match the QBG CLI.",
+        "complexity": "O(N)",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -2,
+        "function": "vectorQbgBuildQGCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            { "name": "index", "type": "string" },
+            { "name": "numberofobjects", "type": "integer", "optional": true },
+            { "name": "numberofsubvectors", "type": "integer", "optional": true },
+            { "name": "rotationiteration", "type": "integer", "optional": true }
+        ]
+    }
+} 

@@ -15,7 +15,7 @@
         ],
         "arguments": [
             {
-                "name": "indexname",
+                "name": "index",
                 "type": "string"
             }
         ]

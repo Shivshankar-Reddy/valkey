@@ -1,6 +1,6 @@
 {
     "VECTOR_QUANTIZED_INFO": {
-        "summary": "Shows information about a quantized vector index.",
+        "summary": "Shows information about a quantized vector index. Argument naming matches the NGTQG CLI.",
         "complexity": "O(1)",
         "group": "vector",
         "since": "1.0.0",
@@ -14,10 +14,7 @@
             "KEYSPACE"
         ],
         "arguments": [
-            {
-                "name": "indexname",
-                "type": "string"
-            }
+            { "name": "index", "type": "string" }
         ]
     }
 } 

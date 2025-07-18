@@ -1,0 +1,16 @@
+{
+    "VECTOR_QBG_INSERT": {
+        "summary": "Inserts a vector into a QBG index.",
+        "complexity": "O(1)",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": 3,
+        "function": "vectorQbgInsertCommand",
+        "command_flags": ["WRITE", "FAST"],
+        "acl_categories": ["KEYSPACE"],
+        "arguments": [
+            { "name": "index", "type": "string" },
+            { "name": "vector", "type": "string" }
+        ]
+    }
+} 

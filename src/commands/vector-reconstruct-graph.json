@@ -1,0 +1,25 @@
+{
+    "VECTOR_RECONSTRUCT_GRAPH": {
+        "summary": "Reconstructs a graph from an existing NGT index using ANNG refinement. Argument order and naming match the NGT CLI.",
+        "complexity": "O(N)",
+        "group": "vector",
+        "since": "1.0.0",
+        "arity": -4,
+        "function": "vectorReconstructGraphCommand",
+        "command_flags": [
+            "WRITE",
+            "FAST"
+        ],
+        "acl_categories": [
+            "KEYSPACE"
+        ],
+        "arguments": [
+            { "name": "inputindex", "type": "string" },
+            { "name": "outputindex", "type": "string" },
+            { "name": "outdegree", "type": "integer" },
+            { "name": "indegree", "type": "integer", "optional": true },
+            { "name": "epsilon", "type": "double", "optional": true },
+            { "name": "accuracy", "type": "double", "optional": true }
+        ]
+    }
+} 

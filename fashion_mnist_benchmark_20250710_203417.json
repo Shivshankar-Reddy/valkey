@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-07-10T20:34:17.703130",
+  "benchmark_type": "fashion_mnist",
+  "results": [
+    {
+      "operation": "insert",
+      "dataset_size": 800,
+      "vector_dim": 784,
+      "duration": 0.2959721088409424,
+      "throughput": 2702.9573939682473,
+      "error_count": 800
+    },
+    {
+      "operation": "build",
+      "dataset_size": 0,
+      "vector_dim": 0,
+      "duration": 0,
+      "throughput": 0,
+      "error_count": 1
+    },
+    {
+      "operation": "search",
+      "dataset_size": 200,
+      "vector_dim": 784,
+      "duration": 0.05106329917907715,
+      "throughput": 3916.7073654721607,
+      "error_count": 200
+    }
+  ]
+}

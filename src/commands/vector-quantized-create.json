@@ -1,6 +1,6 @@
 {
     "VECTOR_QUANTIZED_CREATE": {
-        "summary": "Creates a new quantized vector index for similarity search.",
+        "summary": "Creates a new quantized vector index for similarity search. Argument order and naming match the NGTQG CLI.",
         "complexity": "O(1)",
         "group": "vector",
         "since": "1.0.0",
@@ -14,49 +14,15 @@
             "KEYSPACE"
         ],
         "arguments": [
-            {
-                "name": "indexname",
-                "type": "string"
-            },
-            {
-                "name": "dimension",
-                "type": "integer"
-            },
-            {
-                "name": "edgesizeforcreation",
-                "type": "integer",
-                "optional": true
-            },
-            {
-                "name": "edgesizeforsearch",
-                "type": "integer",
-                "optional": true
-            },
-            {
-                "name": "distancetype",
-                "type": "string",
-                "optional": true
-            },
-            {
-                "name": "objecttype",
-                "type": "string",
-                "optional": true
-            },
-            {
-                "name": "graphtype",
-                "type": "string",
-                "optional": true
-            },
-            {
-                "name": "dimensionofsubvector",
-                "type": "integer",
-                "optional": true
-            },
-            {
-                "name": "maxnumberofedges",
-                "type": "integer",
-                "optional": true
-            }
+            { "name": "index", "type": "string" },
+            { "name": "dimension", "type": "integer" },
+            { "name": "edgesizeforcreation", "type": "integer", "optional": true },
+            { "name": "edgesizeforsearch", "type": "integer", "optional": true },
+            { "name": "distancetype", "type": "string", "optional": true },
+            { "name": "objecttype", "type": "string", "optional": true },
+            { "name": "graphtype", "type": "string", "optional": true },
+            { "name": "dimensionofsubvector", "type": "integer", "optional": true },
+            { "name": "maxnumberofedges", "type": "integer", "optional": true }
         ]
     }
 } 

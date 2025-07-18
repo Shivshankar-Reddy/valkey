@@ -1,6 +1,6 @@
 {
     "VECTOR_QUANTIZE": {
-        "summary": "Quantizes an existing vector index for reduced memory usage.",
+        "summary": "Quantizes an existing vector index for reduced memory usage. Argument order and naming match the NGTQG CLI.",
         "complexity": "O(N*log(N)) where N is the number of vectors.",
         "group": "vector",
         "since": "1.0.0",
@@ -14,20 +14,9 @@
             "KEYSPACE"
         ],
         "arguments": [
-            {
-                "name": "indexname",
-                "type": "string"
-            },
-            {
-                "name": "dimensionofsubvector",
-                "type": "integer",
-                "optional": true
-            },
-            {
-                "name": "maxnumberofedges",
-                "type": "integer",
-                "optional": true
-            }
+            { "name": "index", "type": "string" },
+            { "name": "dimensionofsubvector", "type": "integer", "optional": true },
+            { "name": "maxnumberofedges", "type": "integer", "optional": true }
         ]
     }
 } 

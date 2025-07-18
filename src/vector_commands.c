@@ -7,11 +7,55 @@
 #include <float.h>
 #include <unistd.h>
 #include <omp.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 /* NGT C API includes */
 #include "../deps/NGT/lib/NGT/Capi.h"
 /* NGTQ C API includes */
 #include "../deps/NGT/lib/NGT/NGTQ/Capi.h"
+
+// Implementation for graph reconstruction using the NGT CLI
+bool valkey_ngt_reconstruct_graph(
+    const char *input_path,
+    const char *output_path,
+    int outdegree,
+    int indegree,
+    double epsilon,
+    double accuracy,
+    NGTError error
+) {
+    char cmd[2048];
+    snprintf(cmd, sizeof(cmd),
+        "ngt reconstruct-graph -o %d -i %d -e %f -a %f \"%s\" \"%s\"",
+        outdegree, indegree, epsilon, accuracy, input_path, output_path);
+    int ret = system(cmd);
+    if (ret != 0) {
+        // Optionally set error string in NGTError if you have a helper for that
+        return false;
+    }
+    return true;
+}
+
+// Implementation for NGT refinement using the C API
+static bool ngt_refine_index(const char *path, NGTError error) {
+    NGTIndex index = ngt_open_index(path, error);
+    if (!index) return false;
+    float epsilon = 0.1f;
+    float accuracy = 0.0f;
+    int noOfEdges = 0;
+    int edgeSize = INT_MIN;
+    size_t batchSize = 10000;
+    bool ok = ngt_refine_anng(index, epsilon, accuracy, noOfEdges, edgeSize, batchSize, error);
+    if (ok) {
+        ok = ngt_save_index(index, path, error);
+    }
+    ngt_close_index(index);
+    return ok;
+}
+// Stub for graph reconstruction (not available in C API)
 
 /* Global vector indices storage */
 static dict *vector_indices = NULL;
@@ -422,9 +466,14 @@ void vectorBuildCommand(client *c) {
     
     /* Build the index */
     NGTError error = ngt_create_error_object();
-    uint32_t size = ngt_get_number_of_objects(vindex->index, error);
     
-    if (!ngt_create_index(vindex->index, size, error)) {
+    /* Use number of CPU cores for thread pool size, with a reasonable default */
+    uint32_t thread_pool_size = 8;  // Default to 8 threads
+    #ifdef _OPENMP
+    thread_pool_size = omp_get_num_procs();
+    #endif
+    
+    if (!ngt_create_index(vindex->index, thread_pool_size, error)) {
         addReplyError(c, "Failed to build index");
         ngt_destroy_error_object(error);
         return;
@@ -443,33 +492,38 @@ void vectorBuildCommand(client *c) {
 
 /* VECTOR.REFINE command */
 void vectorRefineCommand(client *c) {
-    if (c->argc != 2) {
-        addReplyError(c, "VECTOR.REFINE requires index name");
+    if (c->argc < 2) {
+        addReplyError(c, "REFINE: too few arguments. Usage: VECTOR.REFINE <indexname>");
         return;
     }
-    
     char *index_name = c->argv[1]->ptr;
-    
-    /* Find the index */
+
+    // Check if the index exists
     dictEntry *de = dictFind(vector_indices, index_name);
     if (!de) {
-        addReplyError(c, "Vector index not found");
+        addReplyErrorFormat(c, "REFINE: index '%s' not found.", index_name);
         return;
     }
-    
     vectorIndex *vindex = dictGetVal(de);
-    
-    /* Refine the index */
-    NGTError error = ngt_create_error_object();
-    
-    if (!ngt_refine_anng(vindex->index, 0.1, 0.95, 100, vindex->edge_size_for_search, 1000, error)) {
-        addReplyError(c, "Failed to refine index");
-        ngt_destroy_error_object(error);
+    char full_path[1024];
+    snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), vindex->path);
+    if (access(full_path, F_OK) != 0) {
+        addReplyErrorFormat(c, "REFINE: index directory '%s' does not exist or is not built.", full_path);
         return;
     }
-    
+
+    // Call the NGT API to refine the index (mimic CLI)
+    NGTError error = ngt_create_error_object();
+    // Use all available CPU cores if supported (future-proof)
+    // int threads = omp_get_num_procs(); // Uncomment if supported
+    bool success = ngt_refine_index(full_path, error); // Replace with actual API call if needed
+    if (success) {
+        addReply(c, shared.ok);
+    } else {
+        const char *error_msg = ngt_get_error_string(error);
+        addReplyErrorFormat(c, "REFINE failed: %s", error_msg);
+    }
     ngt_destroy_error_object(error);
-    addReply(c, shared.ok);
 }
 
 /* VECTOR.DROP command */
@@ -623,57 +677,66 @@ void freeQuantizedVectorIndex(quantizedVectorIndex *qvindex) {
 /* VECTOR.QUANTIZE command - Quantize an existing vector index */
 void vectorQuantizeCommand(client *c) {
     if (c->argc < 2) {
-        addReplyError(c, "VECTOR.QUANTIZE requires index name and optional parameters");
+        addReplyError(c, "QUANTIZE: too few arguments. Usage: VECTOR.QUANTIZE <indexname> [dimension_of_subvector] [max_number_of_edges]");
         return;
     }
-    
     char *index_name = c->argv[1]->ptr;
     float dimension_of_subvector = 0.0;
     size_t max_number_of_edges = 128;
-    
-    /* Parse optional parameters */
+
     if (c->argc > 2) {
         dimension_of_subvector = atof(c->argv[2]->ptr);
+        if (dimension_of_subvector <= 0) {
+            addReplyErrorFormat(c, "QUANTIZE: dimension_of_subvector must be positive (got %f)", dimension_of_subvector);
+            return;
+        }
     }
     if (c->argc > 3) {
         max_number_of_edges = atoi(c->argv[3]->ptr);
+        if (max_number_of_edges <= 0) {
+            addReplyErrorFormat(c, "QUANTIZE: max_number_of_edges must be positive (got %zu)", max_number_of_edges);
+            return;
+        }
     }
-    
-    /* Find the original index */
+
+    // Check if the original index exists and is built (directory and file check)
     dictEntry *de = dictFind(vector_indices, index_name);
     if (!de) {
-        addReplyError(c, "Vector index not found");
+        addReplyErrorFormat(c, "QUANTIZE: source index '%s' not found.", index_name);
         return;
     }
-    
     vectorIndex *vindex = dictGetVal(de);
-    
-    /* Use the full path to the index files */
     char full_path[1024];
     snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), vindex->path);
-    
-    /* Create NGTQG quantization parameters */
+    if (access(full_path, F_OK) != 0) {
+        addReplyErrorFormat(c, "QUANTIZE: index directory '%s' does not exist or is not built.", full_path);
+        return;
+    }
+
+    // Validate dimension_of_subvector divides dimension if set
+    if (dimension_of_subvector > 0 && ((int)vindex->dimension % (int)dimension_of_subvector != 0)) {
+        addReplyErrorFormat(c, "QUANTIZE: dimension_of_subvector (%f) must divide index dimension (%zu) evenly.", dimension_of_subvector, vindex->dimension);
+        return;
+    }
+
+    // Prepare quantization parameters
     NGTQGQuantizationParameters qg_params;
     ngtqg_initialize_quantization_parameters(&qg_params);
     qg_params.dimension_of_subvector = dimension_of_subvector;
     qg_params.max_number_of_edges = max_number_of_edges;
-    
-    /* Create the quantized index using NGTQG API */
+    // qg_params.threads = omp_get_num_procs(); // Uncomment if NGTQG supports this
+
     NGTQGError error = ngt_create_error_object();
-    
-    /* Quantize the index */
     if (!ngtqg_quantize(full_path, qg_params, error)) {
         char error_msg[1024];
-        snprintf(error_msg, sizeof(error_msg), "Failed to quantize index: %s", ngt_get_error_string(error));
+        snprintf(error_msg, sizeof(error_msg), "QUANTIZE failed: %s", ngt_get_error_string(error));
         addReplyError(c, error_msg);
         ngt_destroy_error_object(error);
         return;
     }
-    
-    /* Initialize quantized indices storage if needed */
+
+    // Register the quantized index in memory if needed (optional, for search)
     initQuantizedVectorIndices();
-    
-    /* Create and register the quantized index */
     quantizedVectorIndex *qvindex = createQuantizedVectorIndex(c, index_name, vindex->dimension,
                                                               vindex->edge_size_for_creation, vindex->edge_size_for_search,
                                                               vindex->distance_type, vindex->object_type, vindex->graph_type,
@@ -682,10 +745,7 @@ void vectorQuantizeCommand(client *c) {
         ngt_destroy_error_object(error);
         return;
     }
-    
-    /* Store the quantized index */
     dictAdd(quantized_vector_indices, sdsnew(index_name), qvindex);
-    
     ngt_destroy_error_object(error);
     addReply(c, shared.ok);
 }
@@ -708,13 +768,12 @@ void vectorQuantizedInsertCommand(client *c) {
  */
 void vectorQuantizedSearchCommand(client *c) {
     if (c->argc < 4) {
-        addReplyError(c, "VECTOR.QUANTIZED.SEARCH requires index name, k, and query vector");
+        addReplyError(c, "QUANTIZED.SEARCH: too few arguments. Usage: VECTOR.QUANTIZED.SEARCH <indexname> <k> <queryvector> [epsilon] [result_expansion] [radius]");
         return;
     }
     char *index_name = c->argv[1]->ptr;
     int k = atoi(c->argv[2]->ptr);
     char *vector_data = c->argv[3]->ptr;
-    // Robust NGTQG-like defaults
     float epsilon = 0.02f;
     float result_expansion = 3.0f;
     float radius = 0.0f;  // 0.0 means no radius limit
@@ -722,18 +781,20 @@ void vectorQuantizedSearchCommand(client *c) {
     if (c->argc > argi) epsilon = atof(c->argv[argi++]->ptr);
     if (c->argc > argi) result_expansion = atof(c->argv[argi++]->ptr);
     if (c->argc > argi) radius = atof(c->argv[argi++]->ptr);
-    // Find the quantized index
+
+    // Check if quantized index exists
     if (!quantized_vector_indices) {
-        addReplyError(c, "No quantized vector indices available");
+        addReplyError(c, "QUANTIZED.SEARCH: no quantized vector indices available");
         return;
     }
     dictEntry *de = dictFind(quantized_vector_indices, index_name);
     if (!de) {
-        addReplyError(c, "Quantized vector index not found");
+        addReplyErrorFormat(c, "QUANTIZED.SEARCH: quantized vector index '%s' not found.", index_name);
         return;
     }
     quantizedVectorIndex *qvindex = dictGetVal(de);
-    // Parse vector data
+
+    // Parse and validate query vector
     float *query_vector = zmalloc(sizeof(float) * qvindex->dimension);
     char *token = strtok(vector_data, ",");
     int i = 0;
@@ -743,24 +804,32 @@ void vectorQuantizedSearchCommand(client *c) {
         i++;
     }
     if ((size_t)i != qvindex->dimension) {
-        addReplyError(c, "Vector dimension mismatch");
+        addReplyErrorFormat(c, "QUANTIZED.SEARCH: query vector dimension mismatch (expected %zu, got %d)", qvindex->dimension, i);
         zfree(query_vector);
         return;
     }
+
     // Use the full path to the quantized index files
     char full_path[1024];
     snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), qvindex->path);
+    if (access(full_path, F_OK) != 0) {
+        addReplyErrorFormat(c, "QUANTIZED.SEARCH: quantized index directory '%s' does not exist.", full_path);
+        zfree(query_vector);
+        return;
+    }
+
     // Open the quantized index
     NGTQGError error = ngt_create_error_object();
     NGTQGIndex qg_index = ngtqg_open_index(full_path, error);
     if (!qg_index) {
         char error_msg[2048];
-        snprintf(error_msg, sizeof(error_msg), "Failed to open quantized index: %s", ngt_get_error_string(error));
+        snprintf(error_msg, sizeof(error_msg), "QUANTIZED.SEARCH: failed to open quantized index: %s", ngt_get_error_string(error));
         addReplyError(c, error_msg);
         ngt_destroy_error_object(error);
         zfree(query_vector);
         return;
     }
+
     // Create query
     NGTQGQuery query;
     ngtqg_initialize_query(&query);
@@ -769,12 +838,14 @@ void vectorQuantizedSearchCommand(client *c) {
     query.epsilon = epsilon;
     query.result_expansion = result_expansion;
     query.radius = radius;
+    // query.threads = omp_get_num_procs(); // Uncomment if NGTQG supports this
+
     // Create results array
     NGTObjectDistances results = ngt_create_empty_results(error);
     // Search the quantized index
     if (!ngtqg_search_index(qg_index, query, results, error)) {
         char error_msg[2048];
-        snprintf(error_msg, sizeof(error_msg), "Failed to search quantized index: %s", ngt_get_error_string(error));
+        snprintf(error_msg, sizeof(error_msg), "QUANTIZED.SEARCH: failed to search quantized index: %s", ngt_get_error_string(error));
         addReplyError(c, error_msg);
         ngt_destroy_results(results);
         ngtqg_close_index(qg_index);
@@ -915,21 +986,30 @@ void vectorQuantizedListCommand(client *c) {
 /* VECTOR.BATCH.INSERT command */
 void vectorBatchInsertCommand(client *c) {
     if (c->argc < 3) {
-        addReplyError(c, "VECTOR.BATCH.INSERT requires index name and at least one vector");
+        addReplyError(c, "BATCH.INSERT: too few arguments. Usage: VECTOR.BATCH.INSERT <indexname> <vector1> [<vector2> ...]");
         return;
     }
     char *index_name = c->argv[1]->ptr;
     int num_vectors = c->argc - 2;
-    
+
+    // Check if the index exists
     dictEntry *de = dictFind(vector_indices, index_name);
     if (!de) {
-        addReplyError(c, "Vector index not found");
+        addReplyErrorFormat(c, "BATCH.INSERT: index '%s' not found.", index_name);
         return;
     }
     vectorIndex *vindex = dictGetVal(de);
+    char full_path[1024];
+    snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), vindex->path);
+    if (access(full_path, F_OK) != 0) {
+        addReplyErrorFormat(c, "BATCH.INSERT: index directory '%s' does not exist or is not built.", full_path);
+        return;
+    }
+
     int dim = vindex->dimension;
     int success_count = 0;
-    
+
+    // Insert each vector
     for (int i = 0; i < num_vectors; ++i) {
         char *vector_data = c->argv[2 + i]->ptr;
         float *vector = zmalloc(dim * sizeof(float));
@@ -941,12 +1021,16 @@ void vectorBatchInsertCommand(client *c) {
             j++;
         }
         if (j != dim) {
+            addReplyErrorFormat(c, "BATCH.INSERT: vector %d dimension mismatch (expected %d, got %d)", i + 1, dim, j);
             zfree(vector);
             continue;
         }
         NGTError error = ngt_create_error_object();
         ObjectID id = ngt_insert_index_as_float(vindex->index, vector, dim, error);
         if (id != 0) success_count++;
+        else {
+            addReplyErrorFormat(c, "BATCH.INSERT: failed to insert vector %d: %s", i + 1, ngt_get_error_string(error));
+        }
         ngt_destroy_error_object(error);
         zfree(vector);
     }
@@ -956,24 +1040,31 @@ void vectorBatchInsertCommand(client *c) {
 /* VECTOR.BATCH.SEARCH command */
 void vectorBatchSearchCommand(client *c) {
     if (c->argc < 4) {
-        addReplyError(c, "VECTOR.BATCH.SEARCH requires index name, k, and at least one query vector");
+        addReplyError(c, "BATCH.SEARCH: too few arguments. Usage: VECTOR.BATCH.SEARCH <indexname> <k> <query1> [<query2> ...]");
         return;
     }
     char *index_name = c->argv[1]->ptr;
     int k = atoi(c->argv[2]->ptr);
     int num_queries = c->argc - 3;
-    
+
+    // Check if the index exists
     dictEntry *de = dictFind(vector_indices, index_name);
     if (!de) {
-        addReplyError(c, "Vector index not found");
+        addReplyErrorFormat(c, "BATCH.SEARCH: index '%s' not found.", index_name);
         return;
     }
     vectorIndex *vindex = dictGetVal(de);
+    char full_path[1024];
+    snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), vindex->path);
+    if (access(full_path, F_OK) != 0) {
+        addReplyErrorFormat(c, "BATCH.SEARCH: index directory '%s' does not exist or is not built.", full_path);
+        return;
+    }
+
     int dim = vindex->dimension;
-    
     addReplyArrayLen(c, num_queries);
-    
-    #pragma omp parallel for
+
+    // #pragma omp parallel for // Uncomment for multi-core support if safe
     for (int i = 0; i < num_queries; ++i) {
         float *query_vector = zmalloc(dim * sizeof(float));
         char *vector_data = c->argv[3 + i]->ptr;
@@ -985,7 +1076,6 @@ void vectorBatchSearchCommand(client *c) {
             j++;
         }
         if (j != dim) {
-            #pragma omp critical
             addReplyNull(c);
             zfree(query_vector);
             continue;
@@ -993,7 +1083,6 @@ void vectorBatchSearchCommand(client *c) {
         NGTError error = ngt_create_error_object();
         NGTObjectDistances results = ngt_create_empty_results(error);
         if (!ngt_search_index_as_float(vindex->index, query_vector, dim, k, 0.1, FLT_MAX, results, error)) {
-            #pragma omp critical
             addReplyNull(c);
             ngt_destroy_results(results);
             ngt_destroy_error_object(error);
@@ -1001,18 +1090,196 @@ void vectorBatchSearchCommand(client *c) {
             continue;
         }
         uint32_t result_size = ngt_get_result_size(results, error);
-        #pragma omp critical
-        {
-            addReplyArrayLen(c, result_size);
-            for (uint32_t j = 0; j < result_size; j++) {
-                NGTObjectDistance result = ngt_get_result(results, j, error);
-                addReplyArrayLen(c, 2);
-                addReplyLongLong(c, result.id);
-                addReplyDouble(c, result.distance);
-            }
+        addReplyArrayLen(c, result_size);
+        for (uint32_t r = 0; r < result_size; r++) {
+            NGTObjectDistance result = ngt_get_result(results, r, error);
+            addReplyArrayLen(c, 2);
+            addReplyLongLong(c, result.id);
+            addReplyDouble(c, result.distance);
         }
         ngt_destroy_results(results);
         ngt_destroy_error_object(error);
         zfree(query_vector);
     }
+} 
+
+/* VECTOR.RECONSTRUCT_GRAPH command */
+void vectorReconstructGraphCommand(client *c) {
+    if (c->argc < 2) {
+        addReplyError(c, "RECONSTRUCT_GRAPH: too few arguments. Usage: VECTOR.RECONSTRUCT_GRAPH <indexname>");
+        return;
+    }
+    char *index_name = c->argv[1]->ptr;
+
+    // Check if the index exists
+    dictEntry *de = dictFind(vector_indices, index_name);
+    if (!de) {
+        addReplyErrorFormat(c, "RECONSTRUCT_GRAPH: index '%s' not found.", index_name);
+        return;
+    }
+    vectorIndex *vindex = dictGetVal(de);
+    char full_path[1024];
+    snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), vindex->path);
+    if (access(full_path, F_OK) != 0) {
+        addReplyErrorFormat(c, "RECONSTRUCT_GRAPH: index directory '%s' does not exist or is not built.", full_path);
+        return;
+    }
+
+    // Call the NGT API to reconstruct the graph (mimic CLI)
+    NGTError error = ngt_create_error_object();
+    // Use all available CPU cores if supported (future-proof)
+    // int threads = omp_get_num_procs(); // Uncomment if supported
+    bool success = valkey_ngt_reconstruct_graph(full_path, full_path, 0, 0, 0.0, 0.0, error); // Replace with actual API call if needed
+    if (success) {
+        addReply(c, shared.ok);
+    } else {
+        const char *error_msg = ngt_get_error_string(error);
+        addReplyErrorFormat(c, "RECONSTRUCT_GRAPH failed: %s", error_msg);
+    }
+    ngt_destroy_error_object(error);
+}
+
+/* VECTOR.QBG.CREATE_QG command */
+void vectorQbgCreateQGCommand(client *c) {
+    if (c->argc < 2) {
+        addReplyError(c, "QBG create: too few arguments. Usage: VECTOR.QBG.CREATE_QG <index> [dimension] [number_of_subvectors] [number_of_blobs]");
+        return;
+    }
+    char *index = c->argv[1]->ptr;
+    int dimension = (c->argc > 2) ? atoi(c->argv[2]->ptr) : 128;
+    int number_of_subvectors = (c->argc > 3) ? atoi(c->argv[3]->ptr) : 8;
+    int number_of_blobs = (c->argc > 4) ? atoi(c->argv[4]->ptr) : 1;
+
+    // Check if directory exists (mimic CLI behavior)
+    if (access(index, F_OK) == 0) {
+        addReplyErrorFormat(c, "QBG create: directory '%s' already exists.", index);
+        return;
+    }
+
+    // Validate dimension/subvector relationship
+    if (number_of_subvectors <= 0 || dimension <= 0 || (dimension % number_of_subvectors) != 0) {
+        addReplyErrorFormat(c, "QBG create: The number_of_subvectors (%d) must divide the dimension (%d) evenly.", number_of_subvectors, dimension);
+        return;
+    }
+
+    QBGError error = ngt_create_error_object();
+    QBGConstructionParameters params;
+    qbg_initialize_construction_parameters(&params);
+    params.dimension = dimension;
+    params.number_of_subvectors = number_of_subvectors;
+    params.number_of_blobs = number_of_blobs;
+    params.internal_data_type = 0; // float
+    params.data_type = 0; // float
+    params.distance_type = 0; // L2
+
+    // Use all available CPU cores if supported (future-proof, not all QBG APIs use threads)
+    // params.threads = omp_get_num_procs(); // Uncomment if QBG supports this
+
+    bool success = qbg_create(index, &params, error);
+
+    if (success) {
+        addReply(c, shared.ok);
+    } else {
+        const char *error_msg = ngt_get_error_string(error);
+        addReplyErrorFormat(c, "QBG create failed: %s", error_msg);
+    }
+
+    ngt_destroy_error_object(error);
+}
+
+/* VECTOR.QBG.BUILD_QG command */
+void vectorQbgBuildQGCommand(client *c) {
+    if (c->argc < 2) {
+        addReplyError(c, "QBG build: too few arguments. Usage: VECTOR.QBG.BUILD_QG <index> [number_of_objects] [number_of_subvectors] [rotation_iteration]");
+        return;
+    }
+    char *index = c->argv[1]->ptr;
+    int number_of_objects = (c->argc > 2) ? atoi(c->argv[2]->ptr) : 1000;
+    int number_of_subvectors = (c->argc > 3) ? atoi(c->argv[3]->ptr) : 8;
+    int rotation_iteration = (c->argc > 4) ? atoi(c->argv[4]->ptr) : 0;
+
+    // Check if directory exists
+    if (access(index, F_OK) != 0) {
+        addReplyErrorFormat(c, "QBG build: directory '%s' does not exist.", index);
+        return;
+    }
+
+    // Optionally, validate number_of_subvectors matches what was used at creation (if possible)
+    // (This may require reading a config file or metadata from the QBG index directory.)
+
+    QBGError error = ngt_create_error_object();
+    QBGBuildParameters params;
+    qbg_initialize_build_parameters(&params);
+    params.number_of_objects = number_of_objects;
+    params.number_of_subvectors = number_of_subvectors;
+    params.rotation = (rotation_iteration > 0);
+    params.repositioning = false;
+    params.rotation_iteration = rotation_iteration;
+    params.subvector_iteration = 0;
+    params.number_of_matrices = 1;
+    // params.threads = omp_get_num_procs(); // Uncomment if QBG supports this
+
+    bool success = qbg_build_index(index, &params, error);
+
+    if (success) {
+        addReply(c, shared.ok);
+    } else {
+        const char *error_msg = ngt_get_error_string(error);
+        addReplyErrorFormat(c, "QBG build failed: %s", error_msg);
+    }
+
+    ngt_destroy_error_object(error);
+} 
+
+// QBG vector insert command (shell out to CLI as fallback)
+void vectorQbgInsertCommand(client *c) {
+    if (c->argc != 3) {
+        addReplyError(c, "QBG.INSERT requires index name and vector data");
+        return;
+    }
+    char *index = c->argv[1]->ptr;
+    char *vector_data = c->argv[2]->ptr;
+    char full_path[1024];
+    snprintf(full_path, sizeof(full_path), "%s/%s", getcwd(NULL, 0), index);
+    QBGError error = ngt_create_error_object();
+    QBGIndex qbg_index = qbg_open_index(full_path, false, error);
+    if (!qbg_index) {
+        addReplyErrorFormat(c, "QBG.INSERT: failed to open QBG index: %s", ngt_get_error_string(error));
+        ngt_destroy_error_object(error);
+        return;
+    }
+    // Get dimension from index (optional: could cache this)
+    size_t dim = qbg_get_dimension(qbg_index, error);
+    if (dim == 0) {
+        addReplyErrorFormat(c, "QBG.INSERT: failed to get dimension: %s", ngt_get_error_string(error));
+        qbg_close_index(qbg_index);
+        ngt_destroy_error_object(error);
+        return;
+    }
+    float *vector = zmalloc(dim * sizeof(float));
+    char *token = strtok(vector_data, ",");
+    size_t i = 0;
+    while (token != NULL && i < dim) {
+        vector[i] = atof(token);
+        token = strtok(NULL, ",");
+        i++;
+    }
+    if (i != dim) {
+        addReplyErrorFormat(c, "QBG.INSERT: vector dimension mismatch (expected %zu, got %zu)", dim, i);
+        zfree(vector);
+        qbg_close_index(qbg_index);
+        ngt_destroy_error_object(error);
+        return;
+    }
+    ObjectID id = qbg_insert_object(qbg_index, vector, dim, error);
+    zfree(vector);
+    if (id == 0) {
+        addReplyErrorFormat(c, "QBG.INSERT: failed to insert vector: %s", ngt_get_error_string(error));
+        qbg_close_index(qbg_index);
+        ngt_destroy_error_object(error);
+        return;
+    }
+    qbg_close_index(qbg_index);
+    ngt_destroy_error_object(error);
+    addReply(c, shared.ok);
 } 

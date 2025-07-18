@@ -1,0 +1,26 @@
+[
+  {
+    "operation": "insert",
+    "dataset_size": 160,
+    "vector_dim": 64,
+    "duration": 0.021198749542236328,
+    "throughput": 7547.61499876285,
+    "error_count": 0
+  },
+  {
+    "operation": "build",
+    "dataset_size": 0,
+    "vector_dim": 0,
+    "duration": 0.02340412139892578,
+    "throughput": 0,
+    "error_count": 0
+  },
+  {
+    "operation": "search",
+    "dataset_size": 40,
+    "vector_dim": 64,
+    "duration": 0.006651639938354492,
+    "throughput": 6013.554607692032,
+    "error_count": 0
+  }
+]

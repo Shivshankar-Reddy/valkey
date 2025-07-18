@@ -1,6 +1,6 @@
 {
     "VECTOR_QUANTIZED_LIST": {
-        "summary": "Lists all quantized vector indices.",
+        "summary": "Lists all quantized vector indices. Matches the NGTQG CLI.",
         "complexity": "O(N) where N is the number of indices.",
         "group": "vector",
         "since": "1.0.0",

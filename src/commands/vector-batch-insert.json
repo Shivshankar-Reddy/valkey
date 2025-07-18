@@ -1,6 +1,6 @@
 {
     "VECTOR_BATCH_INSERT": {
-        "summary": "Batch insert vectors into an index.",
+        "summary": "Batch insert vectors into an index. Argument order and naming match the CLI tools.",
         "complexity": "O(N) where N is the number of vectors inserted.",
         "group": "vector",
         "since": "1.0.0",
@@ -14,7 +14,7 @@
             "KEYSPACE"
         ],
         "arguments": [
-            { "name": "indexname", "type": "string" },
+            { "name": "index", "type": "string" },
             { "name": "vectors", "type": "string", "multiple": true }
         ]
     }
